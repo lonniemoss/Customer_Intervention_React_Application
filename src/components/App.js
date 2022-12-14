@@ -1,4 +1,4 @@
-import React from "react"
+import React, { useCallback } from "react"
 import Signup from "./Signup"
 import { Container } from "react-bootstrap"
 import { AuthProvider } from "../contexts/AuthContext"
@@ -11,6 +11,7 @@ import UpdateProfile from "./UpdateProfile"
 import axios from 'axios';
 import { useState } from "react";
 
+const accessToken = "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJjdXN0b21lcjFAYnVzaW5lc3MuY29tIiwiaXNzIjoiaHR0cHM6Ly9qYXZhLWFwaS5jb2RlYm94eHRlc3QueHl6L2F1dGhlbnRpY2F0ZSJ9.QbJsJ-MZXWieFf_fcAkNWI3S9Skqd-yFVF3S2h-uhfo"
 const apiUrl = 'https://java-api.codeboxxtest.xyz/authenticate?email=customer1%40business.com&password=password123';
 
 axios.interceptors.request.use(
@@ -35,20 +36,6 @@ function App() {
   const [foods, setFoods] = useState([]);
   const [fetchError, setFetchError] = useState(null);
 
-  const getJwt = async () => {
-    const { data } = await axios.get(`${apiUrl}/jwt`);
-    localStorage.setItem('token', data.token);
-    setJwt(data.token);
-  };
-const getFoods = async () => {
-    try {
-      const { data } = await axios.get(`${apiUrl}/foods`);
-      setFoods(data);
-      setFetchError(null);
-    } catch (err) {
-      setFetchError(err.message);
-    }
-  };
   return (
     <Container
       className="d-flex align-items-center justify-content-center"
@@ -71,4 +58,5 @@ const getFoods = async () => {
   )
 }
 
-export default App
+export default App;
+
