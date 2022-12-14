@@ -80,6 +80,13 @@ export default function Login() {
           <div className="w-100 text-center mt-3">
             <Link to="/forgot-password">Forgot Password?</Link>
           </div>
+          <style>{`
+          body {
+              background-image: linear-gradient(79deg, #7439db, #4524e9 48%, #e9f74d);
+              animation: gradient 15s ease infinite;
+            }
+          `}
+          </style>
         </Card.Body>
       </Card>
 

@@ -82,6 +82,15 @@ export default function UpdateProfile() {
       <div className="w-100 text-center mt-2">
         <Link to="/">Cancel</Link>
       </div>
+      <style>
+      <style>{`
+          body {
+              background-image: linear-gradient(79deg, #7439db, #4524e9 48%, #e9f74d);
+              animation: gradient 15s ease infinite;
+            }
+          `}
+          </style>
+      </style>
     </>
   )
 }

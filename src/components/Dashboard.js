@@ -29,15 +29,39 @@ export default function Dashboard() {
   const history = useHistory()
   const storedJwt = localStorage.getItem('token');
   const [jwt, setJwt] = useState(storedJwt || null);
-  const [foods, setFoods] = useState([]);
+  // const [foods, setFoods] = useState([]);
+  const [interventions, setInterventions] = useState([]);
   const [fetchError, setFetchError] = useState(null);
 
-  const getFoods = async () => {
+  const InterventionList = async () => {
     try {
       const { data } = await axios.get("https://java-api.codeboxxtest.xyz/interventions");
-      setFoods(data);
-      setFetchError(null);
-    } catch (err) {
+      localStorage.setItem('token', data.token);
+      setInterventions(
+        data.map(({ id, interventionId, interventionStatus, interventionStartDate, interventionEndDate, interventionTechnician, interventionCustomer, interventionBuilding, interventionBattery, interventionColumn, interventionElevator, interventionResult, interventionReport, interventionReportFile, interventionPicture, interventionPictureFile, interventionAuthor, interventionCreatedAt, interventionUpdatedAt }) => ({
+          id,
+          interventionId,
+          interventionStatus,
+          interventionStartDate,
+          interventionEndDate,
+          interventionTechnician,
+          interventionCustomer,
+          interventionBuilding,
+          interventionBattery,
+          interventionColumn,
+          interventionElevator,
+          interventionResult,
+          interventionReport,
+          interventionReportFile,
+          interventionPicture,
+          interventionPictureFile,
+          interventionAuthor,
+          interventionCreatedAt,
+          interventionUpdatedAt
+        }))
+      )
+    }
+    catch (err) {
       setFetchError(err.message);
     }
   };
@@ -78,13 +102,103 @@ export default function Dashboard() {
   return (
     <>
       <section>
-        <button onClick={() => getFoods()}>
+        <button onClick={() => InterventionList()}>
           Get List
         </button>
         <ul>
-          {foods.map((food, i) => (
-            <li>{food.description}</li>
+        <div className="colu">
+          {interventions.map(intervention => (
+            <li key={intervention.id}>
+              <div>
+                <h2>Intervention id: {intervention.interventionId}</h2>
+                <h2>Intervention Status: {intervention.interventionStatus}</h2>
+                <h2>Intervention Start Date: {intervention.interventionStartDate}</h2>
+                <h2>Intervention End Date: {intervention.interventionEndDate}</h2>
+                <h2>Intervention Technician: {intervention.interventionTechnician}</h2>
+                <h2>Intervention Customer: {intervention.interventionCustomer}</h2>
+                <h2>Intervention Building: {intervention.interventionBuilding}</h2>
+                <h2>Intervention Battery: {intervention.interventionBattery}</h2>
+                <h2>Intervention Column: {intervention.interventionColumn}</h2>
+                <h2>Intervention Elevator: {intervention.interventionElevator}</h2>
+                <h2>Intervention Result: {intervention.interventionResult}</h2>
+                <h2>Intervention Report: {intervention.interventionReport}</h2>
+                <h2>Intervention Report File: {intervention.interventionReportFile}</h2>
+                <h2>Intervention Picture: {intervention.interventionPicture}</h2>
+                <h2>Intervention Picture File: {intervention.interventionPictureFile}</h2>
+                <h2>Intervention Author: {intervention.interventionAuthor}</h2>
+                <h2>Intervention Created At: {intervention.interventionCreatedAt}</h2>
+                <h2>Intervention Updated At: {intervention.interventionUpdatedAt}</h2>
+              </div>
+            </li>
           ))}
+        </div>
+        <style>
+          {`
+
+            body {
+              background-image: linear-gradient(79deg, #7439db, #4524e9 48%, #e9f74d);
+              animation: gradient 15s ease infinite;
+            }
+
+            .colu {
+              display: flex;
+              flex-wrap: wrap;
+              justify-content: center;
+              width: 100%;
+
+
+             
+            }
+            .colu li {
+              width: 5000px
+              margin: 10px;
+              padding: 10px;
+              border: 1px solid black;
+              border-radius: 5px;
+            }
+
+            .colu li h2 {
+              margin: 0;
+              padding: 0;
+            }
+
+            .colu li div {
+              padding: 10px;
+              border: 1px solid black;
+              border-radius: 5px;
+              width: 1000px
+            }
+
+            .colu li div h2 {
+              margin: 0;
+              padding: 0;
+            }
+
+            .colu li div h2:first-child {
+              margin-bottom: 10px;
+            }
+
+            .colu li div h2:last-child {
+              margin-top: 50px;
+            }
+
+            .colu li div h2 span {
+              font-weight: bold;
+            }
+
+            .colu li div h2 span::after {
+              content: ":";
+            }
+
+            .colu li div h2 span::before {
+              content: "";
+            }
+
+            
+
+          `}
+           
+        </style>
         </ul>
         {fetchError && (
           <p style={{ color: 'red' }}>{fetchError}</p>
