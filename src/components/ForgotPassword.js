@@ -2,7 +2,7 @@ import React, { useRef, useState } from "react"
 import { Form, Button, Card, Alert } from "react-bootstrap"
 import { useAuth } from "../contexts/AuthContext"
 import { Link } from "react-router-dom"
-
+//this function is used to reset the password
 export default function ForgotPassword() {
   const emailRef = useRef()
   const { resetPassword } = useAuth()
@@ -18,7 +18,7 @@ export default function ForgotPassword() {
       setError("")
       setLoading(true)
       await resetPassword(emailRef.current.value)
-      setMessage("Check your inbox for further instructions")
+      setMessage("Check your inbox for further instructions, if you already have an account with us. If not you can always sign up")
     } catch {
       setError("Failed to reset password")
     }

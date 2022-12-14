@@ -5,7 +5,7 @@ import { Link, useHistory } from "react-router-dom"
 import axios from 'axios';
 
 const apiUrl = 'http://localhost:3001';
-
+//this section is for the axios interceptor. The interceptor will add the authorization header to all requests to the API
 axios.interceptors.request.use(
   config => {
     const { origin } = new URL(config.url);
@@ -21,7 +21,7 @@ axios.interceptors.request.use(
   }
 );
 
-
+//==========================================this function is used to get the JWT====================================================
 export default function Login() {
   const emailRef = useRef()
   const passwordRef = useRef()
@@ -40,7 +40,7 @@ export default function Login() {
     setJwt(data.token);
   };
 
-
+//this function will be used for the form to get the user authenticate
   async function handleSubmit(e) {
     e.preventDefault()
 
