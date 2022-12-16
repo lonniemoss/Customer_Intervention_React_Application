@@ -1,5 +1,9 @@
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
 
+##Usage
+we build a new web application for customers to submit an intervention request by themselves. It was done with React, Bootstrap and firebase. An authentication process
+was added. This, along with the storage of the new requests, will be done in conjunction with an API, which can be found here. 
+
 ## Available Scripts
 
 In the project directory, you can run:
