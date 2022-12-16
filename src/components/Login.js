@@ -8,16 +8,9 @@ const apiUrl = 'http://localhost:3001';
 //this section is for the axios interceptor. The interceptor will add the authorization header to all requests to the API
 axios.interceptors.request.use(
   config => {
-    const { origin } = new URL(config.url);
-    const allowedOrigins = [apiUrl];
-    const token = localStorage.getItem('token');
-    if (allowedOrigins.includes(origin)) {
-      config.headers.authorization = `Bearer ${token}`;
-    }
+    config.headers
+      .Authorization = `Bearer ${"eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJjdXN0b21lcjFAYnVzaW5lc3MuY29tIiwiaXNzIjoiaHR0cHM6Ly9qYXZhLWFwaS5jb2RlYm94eHRlc3QueHl6L2F1dGhlbnRpY2F0ZSJ9.QbJsJ-MZXWieFf_fcAkNWI3S9Skqd-yFVF3S2h-uhfo"}`;
     return config;
-  },
-  error => {
-    return Promise.reject(error);
   }
 );
 

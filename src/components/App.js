@@ -16,12 +16,8 @@ const apiUrl = 'https://java-api.codeboxxtest.xyz/authenticate?email=customer1%4
 
 axios.interceptors.request.use(
   config => {
-    const { origin } = new URL(config.url);
-    const allowedOrigins = [apiUrl];
-    const token = localStorage.getItem('token');
-    if (allowedOrigins.includes(origin)) {
-      config.headers.authorization = `Bearer ${token}`;
-    }
+    config.headers
+      .Authorization = `Bearer ${accessToken}`;
     return config;
   },
   error => {

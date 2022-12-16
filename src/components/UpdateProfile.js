@@ -1,80 +1,119 @@
-import React, { useRef, useState } from "react"
 import { Form, Button, Card, Alert } from "react-bootstrap"
 import { useAuth } from "../contexts/AuthContext"
 import { Link, useHistory } from "react-router-dom"
+import axios from 'axios';
+import React, { useState, useEffect, useCallback } from 'react';
 
-export default function UpdateProfile() {
-  const emailRef = useRef()
-  const passwordRef = useRef()
-  const passwordConfirmRef = useRef()
-  const { currentUser, updatePassword, updateEmail } = useAuth()
-  const [error, setError] = useState("")
-  const [loading, setLoading] = useState(false)
+const accessToken = "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJjdXN0b21lcjFAYnVzaW5lc3MuY29tIiwiaXNzIjoiaHR0cHM6Ly9qYXZhLWFwaS5jb2RlYm94eHRlc3QueHl6L2F1dGhlbnRpY2F0ZSJ9.QbJsJ-MZXWieFf_fcAkNWI3S9Skqd-yFVF3S2h-uhfo"
+const apiUrl = 'https://java-api.codeboxxtest.xyz/interventions/new';
+
+function AddIntervention() {
+  const [interventionCustomer, setInterventionCustomer] = useState("");
+  const [interventionBattery, setInterventionBattery] = useState("");
+  const [interventionBuilding, setInterventionBuilding] = useState("");
+  const [interventionColumn, setInterventionColumn] = useState("");
+  const [interventionElevator, setInterventionElevator] = useState("");
+  const [interventionStatus, setInterventionStatus] = useState("");
+  const [error, setError] = useState("");
+  const { currentUser, logout } = useAuth()
   const history = useHistory()
+  const [interventions, setInterventions] = useState([], {
+    "customerID": 1,
+    "buildingID": 4,
+    "batteryID": 43,
+    "columnID": 3,
+    "elevatorID": 4,
+    "report": "testy"
+  });
 
-  function handleSubmit(e) {
-    e.preventDefault()
-    if (passwordRef.current.value !== passwordConfirmRef.current.value) {
-      return setError("Passwords do not match")
-    }
-
-    const promises = []
-    setLoading(true)
+  const handleLogout = async () => {
     setError("")
 
-    if (emailRef.current.value !== currentUser.email) {
-      promises.push(updateEmail(emailRef.current.value))
+    try {
+      await logout()
+      history.push("/login")
+    } catch {
+      setError("Failed to log out")
     }
-    if (passwordRef.current.value) {
-      promises.push(updatePassword(passwordRef.current.value))
-    }
-
-    Promise.all(promises)
-      .then(() => {
-        history.push("/")
-      })
-      .catch(() => {
-        setError("Failed to update account")
-      })
-      .finally(() => {
-        setLoading(false)
-      })
   }
+
+  const handleSubmit = useCallback(async (event) => {
+    event.preventDefault();
+    try {
+      await axios.post(apiUrl, {
+        "customerID": 1,
+        "buildingID": 4,
+        "batteryID": 43,
+        "columnID": 3,
+        "elevatorID": 4,
+        "report": "testy"
+      }, {
+        headers: {
+          Authorization: `Bearer ${accessToken}`
+        }
+      }).then(resp => {
+      console.log(resp.data);
+  });;
+      history.push("/")
+    } catch {
+      setError("Failed to create an intervention")
+    }
+  }, [history])
+
+
+
+  useEffect(() => {
+    const fetchData = async () => {
+      const result = await axios.post(apiUrl, {
+        "customerID": 1,
+        "buildingID": 4,
+        "batteryID": 43,
+        "columnID": 3,
+        "elevatorID": 4,
+        "report": "testy"
+      }, {
+        headers: {
+          Authorization: `Bearer ${accessToken}`
+        }
+      });
+      setInterventions(result.data);
+    };
+    fetchData();
+  }, []);
 
   return (
     <>
       <Card>
         <Card.Body>
-          <h2 className="text-center mb-4">Update Profile</h2>
+          <h2 className="text-center mb-4">Add Intervention</h2>
           {error && <Alert variant="danger">{error}</Alert>}
           <Form onSubmit={handleSubmit}>
-            <Form.Group id="email">
-              <Form.Label>Email</Form.Label>
-              <Form.Control
-                type="email"
-                ref={emailRef}
-                required
-                defaultValue={currentUser.email}
-              />
+            <Form.Group id="interventionCustomer">
+              <Form.Label>Customer</Form.Label>
+              <Form.Control type="text" onChange={e => setInterventionCustomer(e.target.value)} required />
             </Form.Group>
-            <Form.Group id="password">
-              <Form.Label>Password</Form.Label>
-              <Form.Control
-                type="password"
-                ref={passwordRef}
-                placeholder="Leave blank to keep the same"
-              />
+            <Form.Group id="interventionBattery">
+              <Form.Label>Battery</Form.Label>
+              <Form.Control type="text" onChange={e => setInterventionBattery(e.target.value)} required />
             </Form.Group>
-            <Form.Group id="password-confirm">
-              <Form.Label>Password Confirmation</Form.Label>
-              <Form.Control
-                type="password"
-                ref={passwordConfirmRef}
-                placeholder="Leave blank to keep the same"
-              />
+            <Form.Group id="interventionBuilding">
+              <Form.Label>Building</Form.Label>
+              <Form.Control type="text" onChange={e => setInterventionBuilding(e.target.value)} required />
             </Form.Group>
-            <Button disabled={loading} className="w-100" type="submit">
-              Update
+            <Form.Group id="interventionColumn">
+              <Form.Label>Column</Form.Label>
+              <Form.Control type="text" onChange={e => setInterventionColumn(e.target.value)} required />
+            </Form.Group>
+            <Form.Group id="interventionElevator">
+              <Form.Label>Elevator</Form.Label>
+              <Form.Control type="text" onChange={e => setInterventionElevator(e.target.value)} required />
+            </Form.Group>
+            <Form.Group id="interventionStatus">
+              <Form.Label>Status</Form.Label>
+              <Form.Control type="text" onChange={e => setInterventionStatus(e.target.value)} required />
+            </Form.Group>
+            <Button className="w-100" type="submit">
+              Add Intervention
             </Button>
           </Form>
         </Card.Body>
@@ -82,15 +121,8 @@ export default function UpdateProfile() {
       <div className="w-100 text-center mt-2">
         <Link to="/">Cancel</Link>
       </div>
-      <style>
-      <style>{`
-          body {
-              background-image: linear-gradient(79deg, #7439db, #4524e9 48%, #e9f74d);
-              animation: gradient 15s ease infinite;
-            }
-          `}
-          </style>
-      </style>
     </>
   )
 }
+
+export default AddIntervention
